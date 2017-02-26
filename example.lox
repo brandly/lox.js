@@ -13,6 +13,7 @@ class Breakfast {
   }
 }
 
+// Here is a comment
 var baconAndToast = Breakfast("bacon", "toast");
 baconAndToast.serve("Dear Reader");
 
