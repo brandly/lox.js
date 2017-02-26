@@ -17,6 +17,10 @@ class Breakfast {
 var baconAndToast = Breakfast("bacon", "toast");
 baconAndToast.serve("Dear Reader");
 
+/*
+ * here is a
+ * block comment
+ */
 class Brunch < Breakfast {
   drink() {
     print "How about a Blood Mary?";

@@ -108,6 +108,8 @@ class Scanner {
           while (this._peek() !== '\n' && !this._isAtEnd()) {
             this._advance()
           }
+        } else if (this._match('*')) {
+          this._scanBlockComment()
         } else {
           this._addToken(TT.SLASH)
         }
@@ -237,6 +239,21 @@ class Scanner {
 
   _isAlphaNumeric (char) {
     return this._isAlpha(char) || this._isDigit(char)
+  }
+
+  _scanBlockComment () {
+    const foundEndOfComment = () => this._peek() === '*' && this._peekNext() === '/'
+
+    while (!foundEndOfComment() && !this._isAtEnd()) {
+      this._advance()
+    }
+
+    if (foundEndOfComment()) {
+      // Consume '*'
+      this._advance()
+      // Consume '/'
+      this._advance()
+    }
   }
 }
 
