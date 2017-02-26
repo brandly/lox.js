@@ -1,0 +1,9 @@
+{
+  "scripts": {
+    "example": "node index.js example.lox",
+    "test": "standard"
+  },
+  "devDependencies": {
+    "standard": "8.6.0"
+  }
+}
