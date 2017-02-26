@@ -1,5 +1,24 @@
 const TT = require('./TokenType')
 
+const reservedWords = {
+  and: TT.AND,
+  class: TT.CLASS,
+  else: TT.ELSE,
+  false: TT.FALSE,
+  for: TT.FOR,
+  fun: TT.FUN,
+  if: TT.IF,
+  nil: TT.NIL,
+  or: TT.OR,
+  print: TT.PRINT,
+  return: TT.RETURN,
+  super: TT.SUPER,
+  this: TT.THIS,
+  true: TT.TRUE,
+  var: TT.VAR,
+  while: TT.WHILE
+}
+
 class Token {
   constructor (type, lexeme, literal, line) {
     this.type = type
@@ -204,7 +223,10 @@ class Scanner {
       this._advance()
     }
 
-    this._addToken(TT.IDENTIFIER)
+    const text = this.source.substring(this.start, this.current)
+
+    const type = text in reservedWords ? reservedWords[text] : TT.IDENTIFIER
+    this._addToken(type)
   }
 
   _isAlpha (char) {
