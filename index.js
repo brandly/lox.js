@@ -6,4 +6,6 @@ const sourceCode = fs.readFileSync(filename).toString()
 const scanner = new Scanner(sourceCode)
 const tokens = scanner.scanTokens()
 
-console.log(tokens)
+tokens
+  .map(token => token.toString())
+  .forEach(str => console.log(str))
