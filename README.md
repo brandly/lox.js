@@ -3,5 +3,5 @@
 ```shell
 $ npm install
 $ npm test
-$ npm run example
+$ npm run simple-example
 ```

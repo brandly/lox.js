@@ -4,6 +4,7 @@
   "license": "MIT",
   "scripts": {
     "example": "node index.js example.lox",
+    "simple-example": "node index.js simple.lox",
     "test": "standard"
   },
   "devDependencies": {
