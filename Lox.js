@@ -1,18 +1,22 @@
 const fs = require('fs')
 const Scanner = require('./Scanner')
 const Parser = require('./Parser')
-const AstPrinter = require('./AstPrinter')
+const Interpreter = require('./Interpreter')
 const TT = require('./TokenType')
 
 // Closest thing to a static var without ES7
 var hadError = false
+var hadRuntimeError = false
+
+const interpreter = new Interpreter()
 
 class Lox {
   static runFile (filename) {
     const source = fs.readFileSync(filename).toString()
     this._run(source)
 
-    if (hadError) process.exit(1)
+    if (hadError) process.exit(65)
+    if (hadRuntimeError) process.exit(70)
   }
 
   // TODO:
@@ -40,6 +44,11 @@ class Lox {
     }
   }
 
+  static runtimeError (error) {
+    console.log(`${error.message}\n[line ${error.token.line}]`)
+    hadRuntimeError = true
+  }
+
   static _report (line, where, message) {
     console.error(`[line ${line}] Error${where}: ${message}`)
     hadError = true
@@ -56,12 +65,7 @@ class Lox {
 
     const parser = new Parser(tokens)
     const expression = parser.parse()
-
-    if (hadError) {
-      console.error('Unable to run')
-    } else {
-      console.log(new AstPrinter().print(expression))
-    }
+    interpreter.interpret(expression)
   }
 }
 
