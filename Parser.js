@@ -1,11 +1,11 @@
 const TT = require('./TokenType')
 const Expr = require('./Expr')
-const Lox = require('./Lox')
 
 class Parser {
-  constructor (tokens) {
+  constructor (tokens, Lox) {
     this.tokens = tokens
     this.current = 0
+    this.Lox = Lox
   }
 
   parse () {
@@ -144,7 +144,7 @@ class Parser {
   }
 
   _error (token, message) {
-    Lox.parseError(token, message)
+    this.Lox.parseError(token, message)
     return new ParseError()
   }
 

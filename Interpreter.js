@@ -1,8 +1,7 @@
 const TT = require('./TokenType')
-const Lox = require('./Lox')
 
 class Interpreter {
-  interpret (expression) {
+  interpret (expression, Lox) {
     try {
       const value = this._evaluate(expression)
       console.log(value)

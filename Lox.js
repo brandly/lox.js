@@ -63,9 +63,9 @@ class Lox {
     //   console.log(token)
     // })
 
-    const parser = new Parser(tokens)
+    const parser = new Parser(tokens, Lox)
     const expression = parser.parse()
-    interpreter.interpret(expression)
+    interpreter.interpret(expression, Lox)
   }
 }
 
