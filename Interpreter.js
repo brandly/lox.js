@@ -54,6 +54,11 @@ class Interpreter {
         throw new RuntimeError(expr.operator, 'Operands must be two numbers or two strings.')
       case TT.SLASH:
         this._checkNumberOperands(expr.operator, left, right)
+
+        if (Number(right) === 0) {
+          throw new RuntimeError(expr.operator, 'Unable to divide by zero.')
+        }
+
         return Number(left) / Number(right)
       case TT.STAR:
         this._checkNumberOperands(expr.operator, left, right)
