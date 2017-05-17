@@ -42,8 +42,9 @@ class Interpreter {
         this._checkNumberOperands(expr.operator, left, right)
         return Number(left) - Number(right)
       case TT.PLUS:
-        if (typeof left === 'number' && typeof right === 'number') {
-          return left + right
+        if (typeof left === 'number' || typeof right === 'number') {
+          // TODO: i should probably worry about NaNs
+          return Number(left) + Number(right)
         }
 
         if (typeof left === 'string' && typeof right === 'string') {
