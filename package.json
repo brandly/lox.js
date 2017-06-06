@@ -5,6 +5,7 @@
   "scripts": {
     "example": "node index.js example.lox",
     "simple-example": "node index.js simple.lox",
+    "prints-example": "node index.js prints.lox",
     "test": "standard"
   },
   "devDependencies": {

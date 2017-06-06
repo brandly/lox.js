@@ -1,13 +1,23 @@
 const TT = require('./TokenType')
 
 class Interpreter {
-  interpret (expression, Lox) {
+  interpret (statements, Lox) {
     try {
-      const value = this._evaluate(expression)
-      console.log(value)
+      statements.forEach(stmt => {
+        this._execute(stmt)
+      })
     } catch (error) {
       Lox.runtimeError(error)
     }
+  }
+
+  visitExpressionStmt (stmt) {
+    this._evaluate(stmt.expression)
+  }
+
+  visitPrintStmt (stmt) {
+    const value = this._evaluate(stmt.expression)
+    console.log(value)
   }
 
   visitLiteralExpr (expr) {
@@ -84,6 +94,10 @@ class Interpreter {
 
     // Unreachable.
     return null
+  }
+
+  _execute (stmt) {
+    stmt.accept(this)
   }
 
   _evaluate (expr) {

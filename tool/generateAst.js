@@ -16,6 +16,11 @@ defineAst(outputDir, 'Expr', {
   Unary: 'Token operator, Expr right'
 })
 
+defineAst(outputDir, 'Stmt', {
+  Expression: 'Expr expression',
+  Print: 'Expr expression'
+})
+
 function defineAst (outputDir, baseName, types) {
   const outputPath = path.resolve(outputDir, baseName + '.js')
   const writer = fs.createWriteStream(outputPath)

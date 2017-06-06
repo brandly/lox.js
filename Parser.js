@@ -1,5 +1,6 @@
 const TT = require('./TokenType')
 const Expr = require('./Expr')
+const Stmt = require('./Stmt')
 
 class Parser {
   constructor (tokens, Lox) {
@@ -9,14 +10,33 @@ class Parser {
   }
 
   parse () {
-    try {
-      return this._expression()
-    } catch (error) {
-      if (error instanceof ParseError) {
-        return null
-      }
-      throw error
+    const statements = []
+
+    while (!this._isAtEnd()) {
+      statements.push(this._statement())
     }
+
+    return statements
+  }
+
+  _statement () {
+    if (this._match(TT.PRINT)) {
+      return this._printStatement()
+    } else {
+      return this._expressionStatement()
+    }
+  }
+
+  _printStatement () {
+    const value = this._expression()
+    this._consume(TT.SEMICOLON, "Expect ';' after value.")
+    return new Stmt.Print(value)
+  }
+
+  _expressionStatement () {
+    const expr = this._expression()
+    this._consume(TT.SEMICOLON, "Expect ';' after value.")
+    return new Stmt.Expression(expr)
   }
 
   _expression () {
