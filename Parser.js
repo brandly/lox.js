@@ -13,10 +13,35 @@ class Parser {
     const statements = []
 
     while (!this._isAtEnd()) {
-      statements.push(this._statement())
+      statements.push(this._declaration())
     }
 
     return statements
+  }
+
+  _declaration () {
+    try {
+      if (this._match(TT.VAR)) {
+        return this._varDeclaration()
+      } else {
+        return this._statement()
+      }
+    } catch (error) {
+      this._synchronize()
+      return null
+    }
+  }
+
+  _varDeclaration () {
+    const name = this._consume(TT.IDENTIFIER, 'Expect variable name.')
+
+    let initializer = null
+    if (this._match(TT.EQUAL)) {
+      initializer = this._expression()
+    }
+
+    this._consume(TT.SEMICOLON, "Expect ';' after variable declaration.")
+    return new Stmt.Var(name, initializer)
   }
 
   _statement () {
@@ -108,6 +133,10 @@ class Parser {
 
     if (this._match(TT.NUMBER, TT.STRING)) {
       return new Expr.Literal(this._previous().literal)
+    }
+
+    if (this._match(TT.IDENTIFIER)) {
+      return new Expr.Variable(this._previous())
     }
 
     if (this._match(TT.LEFT_PAREN)) {

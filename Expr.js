@@ -51,9 +51,21 @@ class Unary extends Expr {
   }
 }
 
+class Variable extends Expr {
+  constructor (name) {
+    super()
+    this.name = name
+  }
+
+  accept (visitor) {
+    return visitor.visitVariableExpr(this)
+  }
+}
+
 module.exports = {
   Binary,
   Grouping,
   Literal,
-  Unary
+  Unary,
+  Variable
 }

@@ -26,7 +26,20 @@ class Print extends Stmt {
   }
 }
 
+class Var extends Stmt {
+  constructor (name, initializer) {
+    super()
+    this.name = name
+    this.initializer = initializer
+  }
+
+  accept (visitor) {
+    return visitor.visitVarStmt(this)
+  }
+}
+
 module.exports = {
   Expression,
-  Print
+  Print,
+  Var
 }
