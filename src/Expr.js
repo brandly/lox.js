@@ -4,6 +4,18 @@ class Expr {
   accept (visitor) {}
 }
 
+class Assign extends Expr {
+  constructor (name, value) {
+    super()
+    this.name = name
+    this.value = value
+  }
+
+  accept (visitor) {
+    return visitor.visitAssignExpr(this)
+  }
+}
+
 class Binary extends Expr {
   constructor (left, operator, right) {
     super()
@@ -63,6 +75,7 @@ class Variable extends Expr {
 }
 
 module.exports = {
+  Assign,
   Binary,
   Grouping,
   Literal,

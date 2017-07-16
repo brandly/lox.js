@@ -1,6 +1,12 @@
 const TT = require('./TokenType')
+const Environment = require('./Environment')
+const RuntimeError = require('./RuntimeError')
 
 class Interpreter {
+  constructor () {
+    this.environment = new Environment()
+  }
+
   interpret (statements, Lox) {
     try {
       statements.forEach(stmt => {
@@ -96,6 +102,27 @@ class Interpreter {
     return null
   }
 
+  visitVarStmt (stmt) {
+    var value = null
+    if (stmt.initializer !== null) {
+      value = this._evaluate(stmt.initializer)
+    }
+
+    this.environment.define(stmt.name.lexeme, value)
+    return null
+  }
+
+  visitVariableExpr (expr) {
+    return this.environment.get(expr.name)
+  }
+
+  visitAssignExpr (expr) {
+    const value = this._evaluate(expr.value)
+
+    this.environment.assign(expr.name, value)
+    return value
+  }
+
   _execute (stmt) {
     stmt.accept(this)
   }
@@ -122,13 +149,6 @@ class Interpreter {
   _checkNumberOperands (operator, left, right) {
     if (typeof left === 'number' && typeof right === 'number') return
     throw new RuntimeError(operator, 'Operands must be a numbers.')
-  }
-}
-
-class RuntimeError extends Error {
-  constructor (token, message) {
-    super(message)
-    this.token = token
   }
 }
 

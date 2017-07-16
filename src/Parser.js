@@ -65,7 +65,25 @@ class Parser {
   }
 
   _expression () {
-    return this._equality()
+    return this._assignment()
+  }
+
+  _assignment () {
+    const expr = this._equality()
+
+    if (this._match(TT.EQUAL)) {
+      const equals = this._previous()
+      const value = this._assignment()
+
+      if (expr instanceof Expr.Variable) {
+        const name = expr.name
+        return new Expr.Assign(name, value)
+      }
+
+      this._error(equals, 'Invalid assignment target.')
+    }
+
+    return expr
   }
 
   _equality () {

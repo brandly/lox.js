@@ -10,6 +10,7 @@ if (!outputDir) {
 const indent = '  '
 
 defineAst(outputDir, 'Expr', {
+  Assign: 'Token name, Expr value',
   Binary: 'Expr left, Token operator, Expr right',
   Grouping: 'Expr expression',
   Literal: 'Object value',
