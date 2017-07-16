@@ -3,9 +3,9 @@
   "version": "0.0.1",
   "license": "MIT",
   "scripts": {
-    "example": "node index.js examples/example.lox",
-    "simple-example": "node index.js examples/simple.lox",
-    "prints-example": "node index.js examples/prints.lox",
+    "example": "node src/index.js examples/example.lox",
+    "simple-example": "node src/index.js examples/simple.lox",
+    "prints-example": "node src/index.js examples/prints.lox",
     "test": "standard"
   },
   "devDependencies": {
