@@ -47,6 +47,8 @@ class Parser {
   _statement () {
     if (this._match(TT.PRINT)) {
       return this._printStatement()
+    } else if (this._match(TT.LEFT_BRACE)) {
+      return new Stmt.Block(this._block())
     } else {
       return this._expressionStatement()
     }
@@ -56,6 +58,17 @@ class Parser {
     const value = this._expression()
     this._consume(TT.SEMICOLON, "Expect ';' after value.")
     return new Stmt.Print(value)
+  }
+
+  _block () {
+    const statements = []
+
+    while (!this._check(TT.RIGHT_BRACE) && !this._isAtEnd()) {
+      statements.push(this._declaration())
+    }
+
+    this._consume(TT.RIGHT_BRACE, "Expect '}' after block.")
+    return statements
   }
 
   _expressionStatement () {

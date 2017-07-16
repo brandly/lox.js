@@ -127,6 +127,23 @@ class Interpreter {
     stmt.accept(this)
   }
 
+  visitBlockStmt (stmt) {
+    this._executeBlock(stmt.statements, new Environment(this.environment))
+    return null
+  }
+
+  _executeBlock (statements, environment) {
+    const previous = this.environment
+    try {
+      this.environment = environment
+      statements.forEach(statement => {
+        this._execute(statement)
+      })
+    } finally { // TODO
+      this.environment = previous
+    }
+  }
+
   _evaluate (expr) {
     return expr.accept(this)
   }

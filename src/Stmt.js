@@ -4,6 +4,17 @@ class Stmt {
   accept (visitor) {}
 }
 
+class Block extends Stmt {
+  constructor (statements) {
+    super()
+    this.statements = statements
+  }
+
+  accept (visitor) {
+    return visitor.visitBlockStmt(this)
+  }
+}
+
 class Expression extends Stmt {
   constructor (expression) {
     super()
@@ -39,6 +50,7 @@ class Var extends Stmt {
 }
 
 module.exports = {
+  Block,
   Expression,
   Print,
   Var

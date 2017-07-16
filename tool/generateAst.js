@@ -19,6 +19,7 @@ defineAst(outputDir, 'Expr', {
 })
 
 defineAst(outputDir, 'Stmt', {
+  Block: 'List statements',
   Expression: 'Expr expression',
   Print: 'Expr expression',
   Var: 'Token name, Expr initializer'
