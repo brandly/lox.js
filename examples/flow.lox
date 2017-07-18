@@ -1,0 +1,6 @@
+var comparison = 4 > 3;
+if (comparison and false) {
+  print "it's true";
+} else {
+  print "false";
+}
