@@ -2,5 +2,10 @@ var comparison = 4 > 3;
 if (comparison and false) {
   print "it's true";
 } else {
-  print "false";
+  var count = 0;
+  print "wow";
+  while (count < 3) {
+    print "ayoo";
+    count = count + 1;
+  }
 }

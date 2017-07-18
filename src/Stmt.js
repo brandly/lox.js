@@ -62,10 +62,23 @@ class Var extends Stmt {
   }
 }
 
+class While extends Stmt {
+  constructor (condition, body) {
+    super()
+    this.condition = condition
+    this.body = body
+  }
+
+  accept (visitor) {
+    return visitor.visitWhileStmt(this)
+  }
+}
+
 module.exports = {
   Block,
   Expression,
   If,
   Print,
-  Var
+  Var,
+  While
 }

@@ -133,6 +133,13 @@ class Interpreter {
     return null
   }
 
+  visitWhileStmt (stmt) {
+    while (this._isTruthy(this._evaluate(stmt.condition))) {
+      this._execute(stmt.body)
+    }
+    return null
+  }
+
   visitVariableExpr (expr) {
     return this.environment.get(expr.name)
   }

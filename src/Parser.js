@@ -49,11 +49,22 @@ class Parser {
       return this._ifStatement()
     } else if (this._match(TT.PRINT)) {
       return this._printStatement()
+    } else if (this._match(TT.WHILE)) {
+      return this._whileStatement()
     } else if (this._match(TT.LEFT_BRACE)) {
       return new Stmt.Block(this._block())
     } else {
       return this._expressionStatement()
     }
+  }
+
+  _whileStatement () {
+    this._consume(TT.LEFT_PAREN, "Expect '(' after 'while'.")
+    const condition = this._expression()
+    this._consume(TT.RIGHT_PAREN, "Expect ')' after 'condition'.")
+    const body = this._statement()
+
+    return new Stmt.While(condition, body)
   }
 
   _ifStatement () {
