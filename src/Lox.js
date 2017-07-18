@@ -55,7 +55,7 @@ class Lox {
   }
 
   static _run (source) {
-    const scanner = new Scanner(source)
+    const scanner = new Scanner(source, Lox)
     const tokens = scanner.scanTokens()
 
     // For now, just print the tokens.

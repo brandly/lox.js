@@ -1,5 +1,4 @@
 const TT = require('./TokenType')
-const Lox = require('./Lox')
 
 const reservedWords = {
   and: TT.AND,
@@ -34,7 +33,9 @@ class Token {
 }
 
 class Scanner {
-  constructor (source) {
+  constructor (source, Lox) {
+    this.Lox = Lox
+
     this.source = source
     this.tokens = []
 
@@ -132,7 +133,7 @@ class Scanner {
         } else if (this._isAlpha(char)) {
           this._scanIdentifier()
         } else {
-          Lox.error(this.line, 'Unexpected character.')
+          this.Lox.error(this.line, 'Unexpected character.')
         }
         break
     }
@@ -181,7 +182,7 @@ class Scanner {
 
     // Unterminated string.
     if (this._isAtEnd()) {
-      Lox.error(this.line, 'Unterminated string.')
+      this.Lox.error(this.line, 'Unterminated string.')
       return
     }
 
