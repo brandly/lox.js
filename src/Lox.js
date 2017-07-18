@@ -45,7 +45,11 @@ class Lox {
   }
 
   static runtimeError (error) {
-    console.log(`${error.message}\n[line ${error.token.line}]`)
+    if (error.token && error.token.line) {
+      console.error(`${error.message}\n[line ${error.token.line}]`)
+    } else {
+      console.error(error)
+    }
     hadRuntimeError = true
   }
 

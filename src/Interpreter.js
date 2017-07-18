@@ -23,9 +23,9 @@ class Interpreter {
 
   visitIfStmt (stmt) {
     if (this._isTruthy(this._evaluate(stmt.condition))) {
-      execute(stmt.thenBranch)
+      this._execute(stmt.thenBranch)
     } else if (stmt.elseBranch !== null) {
-      execute(stmt.elseBranch)
+      this._execute(stmt.elseBranch)
     }
     return null
   }
@@ -37,6 +37,18 @@ class Interpreter {
 
   visitLiteralExpr (expr) {
     return expr.value
+  }
+
+  visitLogicalExpr (expr) {
+    const left = this._evaluate(expr.left)
+
+    if (expr.operator.type === TT.OR) {
+      if (this._isTruthy(left)) return left
+    } else {
+      if (!this._isTruthy(left)) return left
+    }
+
+    return this._evaluate(expr.right)
   }
 
   visitGroupingExpr (expr) {

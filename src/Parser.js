@@ -98,7 +98,7 @@ class Parser {
   }
 
   _assignment () {
-    const expr = this._equality()
+    const expr = this._or()
 
     if (this._match(TT.EQUAL)) {
       const equals = this._previous()
@@ -110,6 +110,30 @@ class Parser {
       }
 
       this._error(equals, 'Invalid assignment target.')
+    }
+
+    return expr
+  }
+
+  _or () {
+    var expr = this._and()
+
+    while (this._match(TT.OR)) {
+      const operator = this._previous()
+      const right = this._and()
+      expr = new Expr.Logical(expr, operator, right)
+    }
+
+    return expr
+  }
+
+  _and () {
+    var expr = this._equality()
+
+    while (this._match(TT.AND)) {
+      const operator = this._previous()
+      const right = this._equality()
+      expr = new Expr.Logical(expr, operator, right)
     }
 
     return expr
