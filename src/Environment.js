@@ -24,7 +24,7 @@ module.exports = class Environment {
 
   assign (name, value) {
     if (this.values.hasOwnProperty(name.lexeme)) {
-      this.values.put(name.lexeme, value)
+      this.values[name.lexeme] = value
       return
     }
 
