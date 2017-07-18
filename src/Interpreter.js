@@ -158,8 +158,8 @@ class Interpreter {
   }
 
   _isTruthy (obj) {
-    if (obj == null) return false
-    if (obj instanceof Boolean) return obj
+    if (obj === null) return false
+    if (typeof obj === 'boolean') return obj
     return true
   }
 
