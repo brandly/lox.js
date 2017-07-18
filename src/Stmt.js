@@ -26,6 +26,19 @@ class Expression extends Stmt {
   }
 }
 
+class If extends Stmt {
+  constructor (condition, thenBranch, elseBranch) {
+    super()
+    this.condition = condition
+    this.thenBranch = thenBranch
+    this.elseBranch = elseBranch
+  }
+
+  accept (visitor) {
+    return visitor.visitIfStmt(this)
+  }
+}
+
 class Print extends Stmt {
   constructor (expression) {
     super()
@@ -52,6 +65,7 @@ class Var extends Stmt {
 module.exports = {
   Block,
   Expression,
+  If,
   Print,
   Var
 }

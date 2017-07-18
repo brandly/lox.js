@@ -21,6 +21,15 @@ class Interpreter {
     this._evaluate(stmt.expression)
   }
 
+  visitIfStmt (stmt) {
+    if (this._isTruthy(this._evaluate(stmt.condition))) {
+      execute(stmt.thenBranch)
+    } else if (stmt.elseBranch !== null) {
+      execute(stmt.elseBranch)
+    }
+    return null
+  }
+
   visitPrintStmt (stmt) {
     const value = this._evaluate(stmt.expression)
     console.log(value)
@@ -44,7 +53,7 @@ class Interpreter {
         return -Number(right)
       case TT.BANG:
         this._checkNumberOperand(expr.operator, right)
-        return !this._isTrue(right)
+        return !this._isTruthy(right)
     }
   }
 
@@ -148,7 +157,7 @@ class Interpreter {
     return expr.accept(this)
   }
 
-  _isTrue (obj) {
+  _isTruthy (obj) {
     if (obj == null) return false
     if (obj instanceof Boolean) return obj
     return true

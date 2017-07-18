@@ -45,13 +45,29 @@ class Parser {
   }
 
   _statement () {
-    if (this._match(TT.PRINT)) {
+    if (this._match(TT.IF)) {
+      return this._ifStatement()
+    } else if (this._match(TT.PRINT)) {
       return this._printStatement()
     } else if (this._match(TT.LEFT_BRACE)) {
       return new Stmt.Block(this._block())
     } else {
       return this._expressionStatement()
     }
+  }
+
+  _ifStatement () {
+    this._consume(TT.LEFT_PAREN, "Expect '(' after 'if'.")
+    const condition = this._expression()
+    this._consume(TT.RIGHT_PAREN, "Expect ')' after 'if'.")
+
+    const thenBranch = this._statement()
+    var elseBranch = null
+    if (this._match(TT.ELSE)) {
+      elseBranch = this._statement()
+    }
+
+    return new Stmt.If(condition, thenBranch, elseBranch)
   }
 
   _printStatement () {
