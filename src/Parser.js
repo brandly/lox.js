@@ -45,7 +45,9 @@ class Parser {
   }
 
   _statement () {
-    if (this._match(TT.IF)) {
+    if (this._match(TT.FOR)) {
+      return this._forStatement()
+    } else if (this._match(TT.IF)) {
       return this._ifStatement()
     } else if (this._match(TT.PRINT)) {
       return this._printStatement()
@@ -56,6 +58,50 @@ class Parser {
     } else {
       return this._expressionStatement()
     }
+  }
+
+  _forStatement () {
+    this._consume(TT.LEFT_PAREN, "Expect '(' after 'for'.")
+
+    var initializer
+    if (this._match(TT.SEMICOLON)) {
+      initializer = null
+    } else if (this._match(TT.VAR)) {
+      initializer = this._varDeclaration()
+    } else {
+      initializer = this._expressionStatement()
+    }
+
+    var condition = null
+    if (!this._check(TT.SEMICOLON)) {
+      condition = this._expression()
+    }
+
+    this._consume(TT.SEMICOLON, "Expect ';' after loop condition.")
+
+    var increment = null
+    if (!this._check(TT.RIGHT_PAREN)) {
+      increment = this._expression()
+    }
+    this._consume(TT.RIGHT_PAREN, "Expect ')' after for clauses.")
+
+    var body = this._statement()
+
+    // Begin desugaring into a `while` loop...
+    if (increment !== null) {
+      body = new Stmt.Block([body, new Stmt.Expression(increment)])
+    }
+
+    if (condition === null) {
+      condition = new Expr.Literal(true)
+    }
+    body = new Stmt.While(condition, body)
+
+    if (initializer !== null) {
+      body = new Stmt.Block([initializer, body])
+    }
+
+    return body
   }
 
   _whileStatement () {
