@@ -251,7 +251,38 @@ class Parser {
       return new Expr.Unary(operator, right)
     }
 
-    return this._primary()
+    return this._call()
+  }
+
+  _call () {
+    var expr = this._primary()
+
+    while (true) {
+      if (this._match(TT.LEFT_PAREN)) {
+        expr = this._finishCall(expr)
+      } else {
+        break
+      }
+    }
+
+    return expr
+  }
+
+  _finishCall (callee) {
+    var args = []
+
+    if (!this._check(TT.RIGHT_PAREN)) {
+      do {
+        if (args.length >= 8) {
+          this._error(this._peek(), "Cannot have more than 8 arguments.")
+        }
+        args.add(this._expression())
+      } while (this._match(TT.COMMA))
+    }
+
+    const paren = this._consume(TT.RIGHT_PAREN, "Expect ')' after arguments.")
+
+    return new Expr.Call(callee, paren, args)
   }
 
   _primary () {

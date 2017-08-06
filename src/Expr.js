@@ -29,6 +29,19 @@ class Binary extends Expr {
   }
 }
 
+class Call extends Expr {
+  constructor (callee, paren, args) {
+    super()
+    this.callee = callee
+    this.paren = paren
+    this.args = args
+  }
+
+  accept (visitor) {
+    return visitor.visitCallExpr(this)
+  }
+}
+
 class Grouping extends Expr {
   constructor (expression) {
     super()
@@ -90,6 +103,7 @@ class Variable extends Expr {
 module.exports = {
   Assign,
   Binary,
+  Call,
   Grouping,
   Literal,
   Logical,

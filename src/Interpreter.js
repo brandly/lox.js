@@ -5,6 +5,10 @@ const RuntimeError = require('./RuntimeError')
 class Interpreter {
   constructor () {
     this.environment = new Environment()
+
+    this.environment.define('clock', new NativeFn(0, () => {
+      return Date.now() / 1000
+    }))
   }
 
   interpret (statements, Lox) {
@@ -123,6 +127,25 @@ class Interpreter {
     return null
   }
 
+  visitCallExpr (expr) {
+    const callee = this._evaluate(expr.callee)
+    const args = expr.args.map(arg => this._evaluate(arg))
+
+    if (!(callee instanceof LoxCallable)) {
+      throw new RuntimeError(expr.paren,
+        'Can only call functions and classes.')
+    }
+
+    // TODO: what's the equivalent of:
+    // LoxCallable function = (LoxCallable)callee;
+
+    if (args.length !== callee.arity()) {
+      throw new RuntimeError(expr.paren,
+        `Expected ${callee.arity()} arguments but got ${args.length}.`)
+    }
+    return callee.call(this, args)
+  }
+
   visitVarStmt (stmt) {
     var value = null
     if (stmt.initializer !== null) {
@@ -194,6 +217,23 @@ class Interpreter {
   _checkNumberOperands (operator, left, right) {
     if (typeof left === 'number' && typeof right === 'number') return
     throw new RuntimeError(operator, 'Operands must be a numbers.')
+  }
+}
+
+class LoxCallable {
+  arity () { return this._arity }
+  // call (interpreter, args) {}
+}
+
+class NativeFn extends LoxCallable {
+  constructor (arity, fn) {
+    super(arity, fn)
+    this._arity = arity
+    this._fn = fn
+  }
+
+  call (interpreter, args) {
+    return this._fn.apply(null, args)
   }
 }
 

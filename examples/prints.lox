@@ -2,3 +2,5 @@ var postfix = " plus two";
 print "one" + postfix;
 print true;
 print 2 + 1;
+print clock();
+
