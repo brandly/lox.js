@@ -21,7 +21,9 @@ class Parser {
 
   _declaration () {
     try {
-      if (this._match(TT.VAR)) {
+      if (this._match(TT.FUN)) {
+        return this._function('function')
+      } else if (this._match(TT.VAR)) {
         return this._varDeclaration()
       } else {
         return this._statement()
@@ -150,6 +152,25 @@ class Parser {
     return new Stmt.Expression(expr)
   }
 
+  _function (kind) {
+    const name = this._consume(TT.IDENTIFIER, `Expect ${kind} name.`)
+    this._consume(TT.LEFT_PAREN, `Expect '(' after ${kind} name.`)
+    const parameters = []
+    if (!this._check(TT.RIGHT_PAREN)) {
+      do {
+        if (parameters.length >= 8) {
+          this._error(this._peek(), 'Cannot have more than 8 parameters.')
+        }
+        parameters.push(this._consume(TT.IDENTIFIER, 'Expect parameter name.'))
+      } while (this._match(TT.COMMA))
+    }
+    this._consume(TT.RIGHT_PAREN, "Expect ')' after parameters.")
+
+    this._consume(TT.LEFT_BRACE, `Expect '{' before ${kind} body.`)
+    const body = this._block()
+    return new Stmt.Function(name, parameters, body)
+  }
+
   _expression () {
     return this._assignment()
   }
@@ -274,9 +295,9 @@ class Parser {
     if (!this._check(TT.RIGHT_PAREN)) {
       do {
         if (args.length >= 8) {
-          this._error(this._peek(), "Cannot have more than 8 arguments.")
+          this._error(this._peek(), 'Cannot have more than 8 arguments.')
         }
-        args.add(this._expression())
+        args.push(this._expression())
       } while (this._match(TT.COMMA))
     }
 

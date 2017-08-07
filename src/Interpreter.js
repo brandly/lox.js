@@ -4,9 +4,10 @@ const RuntimeError = require('./RuntimeError')
 
 class Interpreter {
   constructor () {
-    this.environment = new Environment()
+    this._globals = new Environment()
+    this.environment = this._globals
 
-    this.environment.define('clock', new NativeFn(0, () => {
+    this._globals.define('clock', new NativeFn(0, () => {
       return Date.now() / 1000
     }))
   }
@@ -25,6 +26,12 @@ class Interpreter {
     this._evaluate(stmt.expression)
   }
 
+  visitFunctionStmt (stmt) {
+    const fn = new LoxFn(stmt)
+    this.environment.define(stmt.name.lexeme, fn)
+    return null
+  }
+
   visitIfStmt (stmt) {
     if (this._isTruthy(this._evaluate(stmt.condition))) {
       this._execute(stmt.thenBranch)
@@ -36,7 +43,7 @@ class Interpreter {
 
   visitPrintStmt (stmt) {
     const value = this._evaluate(stmt.expression)
-    console.log(value)
+    console.log(value.toString())
   }
 
   visitLiteralExpr (expr) {
@@ -234,6 +241,32 @@ class NativeFn extends LoxCallable {
 
   call (interpreter, args) {
     return this._fn.apply(null, args)
+  }
+}
+
+class LoxFn extends LoxCallable {
+  constructor (declaration) {
+    super()
+    this._declaration = declaration
+  }
+
+  arity () {
+    return this._declaration.parameters.length
+  }
+
+  toString () {
+    return `<fn ${this._declaration.name.lexeme}>`
+  }
+
+  call (interpreter, args) {
+    const environment = new Environment(interpreter.environment)
+
+    this._declaration.parameters.forEach((param, index) => {
+      environment.define(param.lexeme, args[index])
+    })
+
+    interpreter._executeBlock(this._declaration.body, environment)
+    return null
   }
 }
 
