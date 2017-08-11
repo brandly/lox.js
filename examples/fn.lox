@@ -10,3 +10,9 @@ fun add(a, b) {
 }
 
 print add; // "<fn add>".
+
+fun sayHi(first, last) {
+  print "Hi, " + first + " " + last + "!";
+}
+
+sayHi("Dear", "Reader");
