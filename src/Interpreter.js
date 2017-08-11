@@ -27,7 +27,7 @@ class Interpreter {
   }
 
   visitFunctionStmt (stmt) {
-    const fn = new LoxFn(stmt)
+    const fn = new LoxFn(stmt, this.environment)
     this.environment.define(stmt.name.lexeme, fn)
     return null
   }
@@ -254,8 +254,9 @@ class NativeFn extends LoxCallable {
 }
 
 class LoxFn extends LoxCallable {
-  constructor (declaration) {
+  constructor (declaration, closure) {
     super()
+    this._closure = closure
     this._declaration = declaration
   }
 
@@ -268,7 +269,7 @@ class LoxFn extends LoxCallable {
   }
 
   call (interpreter, args) {
-    const environment = new Environment(interpreter.environment)
+    const environment = new Environment(this._closure)
 
     this._declaration.parameters.forEach((param, index) => {
       environment.define(param.lexeme, args[index])
