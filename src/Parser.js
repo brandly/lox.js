@@ -53,6 +53,8 @@ class Parser {
       return this._ifStatement()
     } else if (this._match(TT.PRINT)) {
       return this._printStatement()
+    } else if (this._match(TT.RETURN)) {
+      return this._returnStatement()
     } else if (this._match(TT.WHILE)) {
       return this._whileStatement()
     } else if (this._match(TT.LEFT_BRACE)) {
@@ -133,6 +135,17 @@ class Parser {
     const value = this._expression()
     this._consume(TT.SEMICOLON, "Expect ';' after value.")
     return new Stmt.Print(value)
+  }
+
+  _returnStatement () {
+    const keyword = this._previous()
+    var value = null
+    if (!this._check(TT.SEMICOLON)) {
+      value = this._expression()
+    }
+
+    this._consume(TT.SEMICOLON, "Expect ';' after return value.")
+    return new Stmt.Return(keyword, value)
   }
 
   _block () {

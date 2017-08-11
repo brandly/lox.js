@@ -46,6 +46,15 @@ class Interpreter {
     console.log(value.toString())
   }
 
+  visitReturnStmt (stmt) {
+    var value = null
+    if (stmt.value !== null) {
+      value = this._evaluate(stmt.value)
+    }
+
+    throw new Return(value)
+  }
+
   visitLiteralExpr (expr) {
     return expr.value
   }
@@ -265,8 +274,23 @@ class LoxFn extends LoxCallable {
       environment.define(param.lexeme, args[index])
     })
 
-    interpreter._executeBlock(this._declaration.body, environment)
+    try {
+      interpreter._executeBlock(this._declaration.body, environment)
+    } catch (err) {
+      if (err instanceof Return) {
+        return err.value
+      } else {
+        throw err
+      }
+    }
     return null
+  }
+}
+
+class Return extends RuntimeError {
+  constructor (value) {
+    super(value)
+    this.value = value
   }
 }
 

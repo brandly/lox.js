@@ -63,6 +63,18 @@ class Print extends Stmt {
   }
 }
 
+class Return extends Stmt {
+  constructor (keyword, value) {
+    super()
+    this.keyword = keyword
+    this.value = value
+  }
+
+  accept (visitor) {
+    return visitor.visitReturnStmt(this)
+  }
+}
+
 class Var extends Stmt {
   constructor (name, initializer) {
     super()
@@ -93,6 +105,7 @@ module.exports = {
   Function,
   If,
   Print,
+  Return,
   Var,
   While
 }
