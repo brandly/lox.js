@@ -1,9 +1,4 @@
-function enumify (list) {
-  return list.reduce((obj, value) => {
-    obj[value] = value
-    return obj
-  }, {})
-}
+const enumify = require('./enumify')
 
 module.exports = enumify([
   // Single-character tokens.

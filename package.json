@@ -6,12 +6,13 @@
     "example": "node src/index.js examples/example.lox",
     "simple-example": "node src/index.js examples/simple.lox",
     "prints-example": "node src/index.js examples/prints.lox",
-    "test": "standard"
+    "test": "standard && mocha"
   },
   "devDependencies": {
+    "mocha": "4.0.1",
     "standard": "8.6.0"
   },
   "bin": {
-    "lox.js": "index.js"
+    "lox.js": "src/index.js"
   }
 }
